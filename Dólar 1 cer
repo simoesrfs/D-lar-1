@@ -1,0 +1,86 @@
+name: um_dolar
+description: Um simples app de cara ou coroa com tema de 1 dólar animado.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/cara.gif
+    - assets/coroa.gif
+import 'dart:math';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(OneDollarApp());
+}
+
+class OneDollarApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: '1 Dólar',
+      theme: ThemeData.dark(),
+      home: CoinFlipPage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class CoinFlipPage extends StatefulWidget {
+  @override
+  _CoinFlipPageState createState() => _CoinFlipPageState();
+}
+
+class _CoinFlipPageState extends State<CoinFlipPage> {
+  String _result = 'cara';
+  int _balance = 10;
+  final _random = Random();
+
+  void _flipCoin() {
+    setState(() {
+      _result = _random.nextBool() ? 'cara' : 'coroa';
+      if (_balance > 0) _balance--;
+    });
+  }
+
+  void _resetGame() {
+    setState(() {
+      _balance = 10;
+      _result = 'cara';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('1 Dólar')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Saldo: \$$_balance', style: TextStyle(fontSize: 24)),
+            SizedBox(height: 20),
+            // Aqui usamos GIFs animados para a moeda
+            Image.asset('assets/$_result.gif', height: 200),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _balance > 0 ? _flipCoin : null,
+              child: Text('Jogar', style: TextStyle(fontSize: 20)),
+            ),
+            TextButton(
+              onPressed: _resetGame,
+              child: Text('Resetar'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
